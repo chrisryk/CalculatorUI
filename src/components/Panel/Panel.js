@@ -6,7 +6,7 @@ import postDoubleOperands from '../../apiServices/doubleOperandsService';
 import postSingleOperand from '../../apiServices/singleOperandService';
 import buttonValues from './constants/buttonValues';
 import { checkOperand } from './helpers/panelHelpers';
-import { tooManyOperands } from './constants/messages';
+import { incorrectInput, tooManyOperands } from './constants/messages';
 
 const Panel = ({ setDataWasPosted }) => {
   const [firstOperand, setFirstOperand] = useState('');
@@ -47,6 +47,9 @@ const Panel = ({ setDataWasPosted }) => {
     if (secondOperand) {
       setResult(tooManyOperands);
       return;
+    } else if (!firstOperand) {
+      setResult(incorrectInput);
+      return;
     }
 
     postSingleOperand(firstOperand, operator).then((data) => setResult(data));
@@ -57,7 +60,7 @@ const Panel = ({ setDataWasPosted }) => {
   const handleEqualsClick = () => {
     if (!secondOperand) {
       clearOperation();
-      setResult(firstOperand);
+      setResult(incorrectInput);
       return;
     }
 
