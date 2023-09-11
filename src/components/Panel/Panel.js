@@ -6,7 +6,7 @@ import postDoubleOperands from '../../apiServices/doubleOperandsService';
 import postSingleOperand from '../../apiServices/singleOperandService';
 import buttonValues from './constants/buttonValues';
 
-const Panel = () => {
+const Panel = ({ setDataWasPosted }) => {
   const [firstOperand, setFirstOperand] = useState('');
   const [secondOperand, setSecondOperand] = useState('');
   const [operator, setOperator] = useState('');
@@ -17,16 +17,6 @@ const Panel = () => {
     setSecondOperand('');
     setOperator('');
     setResult('');
-  };
-
-  const handleSingleOperandOperatorClick = (operator) => {
-    if (secondOperand) {
-      setResult('Use only one operand');
-      return;
-    }
-
-    postSingleOperand(firstOperand, operator).then((data) => setResult(data));
-    clearOperation();
   };
 
   const checkOperand = (currentValue, clickedValue) => {
@@ -86,6 +76,17 @@ const Panel = () => {
       : setSecondOperand((prev) => prev.slice(0, -1));
   };
 
+  const handleSingleOperandOperatorClick = (operator) => {
+    if (secondOperand) {
+      setResult('Use only one operand');
+      return;
+    }
+
+    postSingleOperand(firstOperand, operator).then((data) => setResult(data));
+    clearOperation();
+    setDataWasPosted(true);
+  };
+
   const handleEqualsClick = () => {
     if (!secondOperand) {
       clearOperation();
@@ -97,6 +98,7 @@ const Panel = () => {
       setResult(data),
     );
     clearOperation();
+    setDataWasPosted(true);
   };
 
   return (

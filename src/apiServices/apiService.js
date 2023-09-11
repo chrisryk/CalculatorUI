@@ -24,3 +24,27 @@ export const postData = async (path = '', data = {}) => {
     });
   }
 };
+
+export const getData = async (path = '') => {
+  const url = apiUrl + path;
+  const response = await fetch(url, {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      accept: 'text/plain',
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+  });
+
+  if (response.ok) {
+    return response.json();
+  } else {
+    return response.text().then((errorMessage) => {
+      throw new Error(errorMessage);
+    });
+  }
+};
