@@ -1,4 +1,4 @@
-const apiUrl = 'https://localhost:44380';
+const apiUrl = 'https://localhost:5000';
 
 export const postData = async (path = '', data = {}) => {
   const url = apiUrl + path;
