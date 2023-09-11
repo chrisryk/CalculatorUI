@@ -29,7 +29,7 @@ const History = ({ dataWasPosted, setDataWasPosted }) => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        data.map((r, index) => (
+        data?.map((r, index) => (
           <div key={index}>{`${r.firstValue}${r.operator}${
             r.secondValue || ''
           }=${r.result}`}</div>
