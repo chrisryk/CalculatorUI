@@ -16,6 +16,7 @@ const Panel = () => {
     setFirstOperand('');
     setSecondOperand('');
     setOperator('');
+    setResult('');
   };
 
   const handleSingleOperandOperatorClick = (operator) => {
@@ -28,7 +29,70 @@ const Panel = () => {
     clearOperation();
   };
 
+  const checkOperand = (currentValue, clickedValue) => {
+    if (
+      clickedValue === buttonValues.changeSign &&
+      currentValue[0] === buttonValues.minus
+    ) {
+      return currentValue.substring(1);
+    } else if (
+      clickedValue === buttonValues.changeSign &&
+      currentValue[0] !== buttonValues.minus
+    ) {
+      return buttonValues.minus + currentValue;
+    } else if (
+      clickedValue === buttonValues.comma &&
+      currentValue.includes('.')
+    ) {
+      return currentValue;
+    } else if (
+      clickedValue === buttonValues.comma &&
+      (!currentValue || currentValue === buttonValues.zero)
+    ) {
+      return buttonValues.zero + buttonValues.comma;
+    } else if (
+      clickedValue === buttonValues.zero &&
+      currentValue === buttonValues.zero
+    ) {
+      return currentValue;
+    } else if (
+      clickedValue !== buttonValues.zero &&
+      currentValue === buttonValues.zero
+    ) {
+      return clickedValue;
+    }
+    return currentValue + clickedValue;
+  };
+
+  const handleDigitsPanelClick = (value) => {
+    !operator
+      ? setFirstOperand((prev) => checkOperand(prev, value))
+      : setSecondOperand((prev) => checkOperand(prev, value));
+  };
+
+  const handleOperatorClick = (operator) => {
+    if (firstOperand.endsWith(buttonValues.comma)) {
+      setFirstOperand((prev) => prev.slice(0, -1));
+    } else if (!firstOperand) {
+      setFirstOperand(buttonValues.zero);
+    }
+
+    setOperator(operator);
+  };
+
+  const handleBackspaceClick = () => {
+    !operator
+      ? setFirstOperand((prev) => prev.slice(0, -1))
+      : setSecondOperand((prev) => prev.slice(0, -1));
+  };
+
   const handleEqualsClick = () => {
+    if (!secondOperand) {
+      clearOperation();
+      setResult(firstOperand);
+      return;
+    }
+
     postDoubleOperands(firstOperand, secondOperand, operator).then((data) =>
       setResult(data),
     );
@@ -43,39 +107,55 @@ const Panel = () => {
         operator={operator}
         result={result}
       />
+
       <div className={styles.buttonsContainer}>
         <div className={styles.buttonsDigitsContainer}>
-          {buttonValues.digits.map((value, index) => (
+          {[
+            ...buttonValues.digits,
+            buttonValues.changeSign,
+            buttonValues.zero,
+            buttonValues.comma,
+          ].map((value, index) => (
             <Button
               value={value}
               key={index}
-              onClick={() => {
-                operator
-                  ? setSecondOperand((prev) => prev + value)
-                  : setFirstOperand((prev) => prev + value);
-              }}
+              onClick={() => handleDigitsPanelClick(value)}
             />
           ))}
         </div>
-        <div>
-          {buttonValues.doubleOperandsOperators.map((operator, index) => (
+
+        <div className={styles.operationsContainer}>
+          <div>
             <Button
-              value={operator}
-              key={index}
-              onClick={() => setOperator(operator)}
+              value={buttonValues.clear}
+              onClick={() => clearOperation()}
             />
-          ))}
-          {buttonValues.singleOperandOperators.map((operator, index) => (
             <Button
-              value={operator}
-              key={index}
-              onClick={() => handleSingleOperandOperatorClick(operator)}
+              value={buttonValues.backspace}
+              onClick={() => handleBackspaceClick()}
             />
-          ))}
-          <Button
-            value={buttonValues.equals}
-            onClick={() => handleEqualsClick()}
-          />
+          </div>
+
+          <div>
+            {buttonValues.doubleOperandsOperators.map((operator, index) => (
+              <Button
+                value={operator}
+                key={index}
+                onClick={() => handleOperatorClick(operator)}
+              />
+            ))}
+            {buttonValues.singleOperandOperators.map((operator, index) => (
+              <Button
+                value={operator}
+                key={index}
+                onClick={() => handleSingleOperandOperatorClick(operator)}
+              />
+            ))}
+            <Button
+              value={buttonValues.equals}
+              onClick={() => handleEqualsClick()}
+            />
+          </div>
         </div>
       </div>
     </div>

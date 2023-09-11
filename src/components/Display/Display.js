@@ -4,7 +4,9 @@ const Display = ({ firstOperand, secondOperand, operator, result }) => {
   return (
     <div className={styles.display}>
       <span>
-        {result ? result : `${firstOperand}${operator}${secondOperand}`}
+        {result || result === 0
+          ? result
+          : `${firstOperand}${operator}${secondOperand}`}
       </span>
     </div>
   );
