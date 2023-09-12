@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import getHistory from '../../apiServices/historyService';
 import styles from './History.module.scss';
+import { fibonacciFn, functionValue } from '../Panel/constants/resultValues';
 
 const History = ({ dataWasPosted, setDataWasPosted }) => {
   const [data, setData] = useState([]);
@@ -30,9 +31,13 @@ const History = ({ dataWasPosted, setDataWasPosted }) => {
         <div>Loading...</div>
       ) : (
         data?.map((r, index) => (
-          <div key={index}>{`${r.firstValue}${r.operator}${
-            r.secondValue || ''
-          }=${r.result}`}</div>
+          <div key={index}>
+            {r.operator === fibonacciFn
+              ? `${r.operator.replace(functionValue, r.firstValue)}=${r.result}`
+              : `${r.firstValue}${r.operator}${r.secondValue || ''}=${
+                  r.result
+                }`}
+          </div>
         ))
       )}
     </div>

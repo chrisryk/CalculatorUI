@@ -5,7 +5,7 @@ const buttonValues = {
   changeSign: '-/+',
   minus: '-',
   doubleOperandsOperators: ['+', '-', '*', '/'],
-  singleOperandOperators: ['!', 'Fib'],
+  singleOperandOperators: ['!', 'F(n)'],
   equals: '=',
   clear: 'C',
   backspace: 'CE',

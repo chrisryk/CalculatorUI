@@ -1,7 +1,11 @@
 import buttonValues from '../constants/buttonValues';
 
+const maxInputSize = 12;
+
 export const checkOperand = (currentValue, clickedValue) => {
-  if (
+  if (currentValue.length === maxInputSize) {
+    return currentValue;
+  } else if (
     clickedValue === buttonValues.changeSign &&
     currentValue[0] === buttonValues.minus
   ) {
